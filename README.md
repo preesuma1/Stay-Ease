@@ -72,6 +72,7 @@ Sort results
 Guests can review properties
 Rating system (1–5 stars)
 Feedback visibility
+
 5. System Architecture
 Frontend
 HTML, CSS, JavaScript
@@ -87,6 +88,7 @@ Django Channels
 Redis (for WebSocket handling)
 Payment Integration
 Khalti API
+
 6. Database Design (Main Models)
 User Model
 id
@@ -123,6 +125,7 @@ sender
 receiver
 message
 timestamp
+
 7. Workflow
 Booking Flow
 User searches property
@@ -135,18 +138,21 @@ Guest opens property
 Clicks “Chat with Host”
 WebSocket connection established
 Messages exchanged instantly
+
 8. Security Considerations
 Use HTTPS
 CSRF protection in Django
 Secure payment verification
 Authentication & authorization
 Input validation
+
 9. Future Enhancements
 Mobile app version
 AI-based property recommendations
 Multi-language support
 Advanced analytics dashboard
 Email/SMS notifications
-10. Conclusion
 
+
+10. Conclusion
 StayEase provides a complete booking solution with modern features like secure payments and real-time communication. Using Django ensures scalability, while Khalti integration makes it locally relevant. The addition of live chat enhances user experience and trust between guests and hosts.
