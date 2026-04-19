@@ -9,6 +9,11 @@ class GenderType(models.TextChoices):
     FEMALE = "Female"
     OTHER = "Other"
 
+class UserRole(models.TextChoices):
+    GUEST = "Guest"
+    HOST = "Host"
+    ADMIN = "Admin"
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -18,6 +23,11 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(null=True, blank=True)
     gender = models.CharField(
         max_length=10, choices=GenderType.choices, null=True, blank=True
+    )
+    role = models.CharField(
+        max_length=10,
+        choices=UserRole.choices,
+        default=UserRole.GUEST
     )
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField()
