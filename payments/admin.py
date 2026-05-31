@@ -4,6 +4,6 @@ from .models import Payment
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ["user", "booking", "amount", "status", "transaction_id", "created_at"]
+    list_display = [ "booking", "amount", "status", "transaction_id", "created_at"]
     list_filter = ["status"]
     search_fields = ["user__username", "transaction_id"]

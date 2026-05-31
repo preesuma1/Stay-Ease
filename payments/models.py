@@ -10,9 +10,6 @@ class Payment(models.Model):
         ("FAILED", "Failed"),
     )
 
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE)
 
     booking = models.OneToOneField(
         Booking,

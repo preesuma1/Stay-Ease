@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema
 
@@ -21,12 +21,61 @@ class PaymentListView(GenericAPIView):
         payments = Payment.objects.all()
         return Response(PaymentSerializer(payments, many=True).data)
 
-class PaymentListView(GenericAPIView):
+class InitiatePaymentView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     @extend_schema(tags=["Payments"])
-    def get(self, request):
-        payments = Payment.objects.all()
-        return Response(PaymentSerializer(payments, many=True).data)
+    def post(self, request, booking_id):
+
+        booking = get_object_or_404(Booking, id=booking_id)
+
+        # prevent double payment
+        if hasattr(booking, "payment") and booking.payment.status == "COMPLETED":
+            return Response({"error": "Already paid"}, status=400)
+
+        payload = {
+            "return_url": "http://127.0.0.1:8000/api/payments/verify/",
+            "website_url": "http://127.0.0.1:8000",
+
+            "amount": int(booking.total_price * 100),
+
+            "purchase_order_id": str(booking.id),
+            "purchase_order_name": f"Booking {booking.id}",
+
+            "customer_info": {
+                "name": request.user.username,
+                "email": request.user.email,
+                "phone": "9800000000"
+            }
+        }
+
+        headers = {
+            "Authorization": f"Key {settings.KHALTI_SECRET_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        response = requests.post(
+            settings.KHALTI_INITIATE_URL,
+            json=payload,
+            headers=headers
+        )
+
+        data = response.json()
+
+        if "pidx" not in data:
+            return Response({"error": "Khalti initiation failed"}, status=400)
+
+        Payment.objects.create(
+            booking=booking,
+            amount=booking.total_price,
+            pidx=data["pidx"],
+            status="PENDING"
+        )
+
+        return Response({
+            "payment_url": data["payment_url"],
+            "pidx": data["pidx"]
+        })
     
 class VerifyPaymentView(GenericAPIView):
 
