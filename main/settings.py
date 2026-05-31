@@ -153,4 +153,17 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
 }
+
+
+
+KHALTI_SECRET_KEY = "4032bfa1d4de4fab8594e94b7209b451"
+
+KHALTI_INITIATE_URL = (
+    "https://dev.khalti.com/api/v2/epayment/initiate/"
+)
+
+KHALTI_LOOKUP_URL = (
+    "https://dev.khalti.com/api/v2/epayment/lookup/"
+)
+
 # myproject/settings.py
